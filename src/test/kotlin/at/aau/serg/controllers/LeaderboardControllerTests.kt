@@ -37,6 +37,7 @@ class LeaderboardControllerTests {
         assertEquals(third, res[2])
     }
 
+    // 2.2.1 Sortierung: Assertions angepasst – bei gleichem Score wird nun nach kürzerer timeInSeconds sortiert statt nach id
     @Test
     fun test_getLeaderboard_sameScore_CorrectIdSorting() {
         val first = GameResult(1, "first", 20, 20.0)
@@ -49,9 +50,9 @@ class LeaderboardControllerTests {
 
         verify(mockedService).getGameResults()
         assertEquals(3, res.size)
-        assertEquals(first, res[0])
-        assertEquals(second, res[1])
-        assertEquals(third, res[2])
+        assertEquals(second, res[0])
+        assertEquals(third, res[1])
+        assertEquals(first, res[2])
     }
 
 }

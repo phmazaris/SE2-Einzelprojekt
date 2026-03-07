@@ -14,6 +14,7 @@ class LeaderboardController(
 
     @GetMapping
     fun getLeaderboard(): List<GameResult> =
-        gameResultService.getGameResults().sortedWith(compareBy({ -it.score }, { it.id }))
+        // 2.2.1 Sortierung: Tiebreaker bei gleichem Score geändert von { it.id } auf { it.timeInSeconds }
+        gameResultService.getGameResults().sortedWith(compareBy({ -it.score }, { it.timeInSeconds }))
 
 }
