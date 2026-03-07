@@ -72,4 +72,27 @@ class GameResultServiceTests {
         assertEquals(2, res[1].id)
     }
 
+    // 2.2.3 Tests: deleteGameResult für 100% Coverage
+    @Test
+    fun test_deleteGameResult_existingId_removesEntry() {
+        val gameResult = GameResult(0, "player1", 17, 15.3)
+        service.addGameResult(gameResult)
+
+        val deleted = service.deleteGameResult(1)
+
+        assertEquals(true, deleted)
+        assertEquals(0, service.getGameResults().size)
+    }
+
+    @Test
+    fun test_deleteGameResult_nonExistingId_returnsFalse() {
+        val gameResult = GameResult(0, "player1", 17, 15.3)
+        service.addGameResult(gameResult)
+
+        val deleted = service.deleteGameResult(99)
+
+        assertEquals(false, deleted)
+        assertEquals(1, service.getGameResults().size)
+    }
+
 }
