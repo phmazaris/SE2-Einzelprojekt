@@ -4,6 +4,7 @@ plugins {
     kotlin("plugin.spring") version "2.3.10"
     id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
+    jacoco
 }
 
 group = "at.aau.serg"
@@ -30,9 +31,54 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-tasks.withType<Test> {
+tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
 }
+
+val jacocoIncludedClasses = listOf(
+    "at/aau/serg/services/GameResultService.class",
+    "at/aau/serg/controllers/LeaderboardController.class",
+    "at/aau/serg/controllers/GameResultController.class"
+)
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    classDirectories.setFrom(
+        files(
+            classDirectories.files.map {
+                fileTree(it) {
+                    include(jacocoIncludedClasses)
+                }
+            }
+        )
+    )
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    classDirectories.setFrom(
+        files(
+            classDirectories.files.map {
+                fileTree(it) {
+                    include(jacocoIncludedClasses)
+                }
+            }
+        )
+    )
+    violationRules {
+        rule {
+            limit {
+                minimum = "1.00".toBigDecimal()
+            }
+        }
+    }
+}
+
 kotlin {
     jvmToolchain(21)
 }
